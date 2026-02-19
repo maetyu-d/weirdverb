@@ -1,6 +1,6 @@
-# weirdVERB (JUCE AU/VST3)
+# weirdVERB
 
-Experimental lo-fi convolution reverb with living IR behavior, sidechain CV modulation, and highly unstable space modes. Built in JUCE (AU/VST3).
+Experimental and very weird lo-fi convolution reverb with "living" IR behavior, sidechain CV modulation, and highly unstable space modes. Built in JUCE (AU/VST3).
 
 ## Features
 
