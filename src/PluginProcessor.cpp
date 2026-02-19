@@ -19,6 +19,7 @@ constexpr const char* kCvFilterTimeParam = "stability_cv_filter_time";
 constexpr const char* kDryParam = "dry";
 constexpr const char* kWetParam = "wet";
 constexpr const char* kOutputParam = "output";
+constexpr const char* kIrBankParam = "ir_bank";
 constexpr const char* kFreezeParam = "freeze";
 constexpr const char* kFreezeModeParam = "freeze_mode";
 constexpr const char* kOversampleHqParam = "oversample_hq";
@@ -47,6 +48,7 @@ float cvFilterTimeSeconds(int index) {
 struct FactoryPreset {
     const char* name;
     int mode;
+    int irBank;
     float stability;
     int breathSync;
     float breathRate;
@@ -63,16 +65,16 @@ struct FactoryPreset {
 };
 
 const std::array<FactoryPreset, 10> kFactoryPresets {{
-    { "Null Tape",        0, 0.97f, 1, 0.06f, 0.18f, 0,  0.00f, 0, 0, 0.74f, 0.38f, 0.92f, 0, false },
-    { "Precrime Bloom",   1, 0.06f, 5, 4.80f, 1.00f, 0,  0.00f, 1, 0, 0.15f, 0.95f, 0.84f, 0, true  },
-    { "Shattered Prism",  2, 0.18f, 6, 6.20f, 0.94f, 1,  0.92f, 0, 0, 0.30f, 0.90f, 0.78f, 1, false },
-    { "Swamp Antenna",    3, 0.08f, 2, 0.14f, 1.00f, 1, -0.88f, 1, 2, 0.08f, 1.00f, 0.72f, 1, true  },
-    { "Packet Graveyard", 4, 0.31f, 0, 7.70f, 0.86f, 1,  0.75f, 0, 0, 0.42f, 0.86f, 0.88f, 0, false },
-    { "Broken Choir RAM", 5, 0.03f, 5, 7.95f, 1.00f, 1,  1.00f, 0, 0, 0.10f, 1.00f, 0.68f, 0, false },
-    { "Inverted Corridor",6, 0.83f, 3, 0.55f, 0.41f, 1, -0.46f, 1, 1, 0.92f, 0.46f, 0.95f, 0, false },
-    { "Ash Afterimage",   7, 0.12f, 7, 0.22f, 1.00f, 1, -1.00f, 1, 2, 0.20f, 0.96f, 0.80f, 1, true  },
-    { "Self-Taught Room", 8, 0.01f, 0, 8.00f, 1.00f, 1,  1.00f, 0, 0, 0.00f, 1.00f, 0.70f, 0, false },
-    { "Lofi Leviathan",   0, 0.22f, 4, 3.60f, 1.00f, 1,  0.66f, 1, 2, 0.25f, 0.95f, 0.76f, 0, true  },
+    { "Null Tape",        0, 0, 0.97f, 1, 0.06f, 0.18f, 0,  0.00f, 0, 0, 0.74f, 0.38f, 0.92f, 0, false },
+    { "Precrime Bloom",   1, 0, 0.06f, 5, 4.80f, 1.00f, 0,  0.00f, 1, 0, 0.15f, 0.95f, 0.84f, 0, true  },
+    { "Shattered Prism",  2, 1, 0.18f, 6, 6.20f, 0.94f, 1,  0.92f, 0, 0, 0.30f, 0.90f, 0.78f, 1, false },
+    { "Swamp Antenna",    3, 1, 0.08f, 2, 0.14f, 1.00f, 1, -0.88f, 1, 2, 0.08f, 1.00f, 0.72f, 1, true  },
+    { "Packet Graveyard", 4, 1, 0.31f, 0, 7.70f, 0.86f, 1,  0.75f, 0, 0, 0.42f, 0.86f, 0.88f, 0, false },
+    { "Broken Choir RAM", 5, 1, 0.03f, 5, 7.95f, 1.00f, 1,  1.00f, 0, 0, 0.10f, 1.00f, 0.68f, 0, false },
+    { "Inverted Corridor",6, 0, 0.83f, 3, 0.55f, 0.41f, 1, -0.46f, 1, 1, 0.92f, 0.46f, 0.95f, 0, false },
+    { "Ash Afterimage",   7, 1, 0.12f, 7, 0.22f, 1.00f, 1, -1.00f, 1, 2, 0.20f, 0.96f, 0.80f, 1, true  },
+    { "Self-Taught Room", 8, 1, 0.01f, 0, 8.00f, 1.00f, 1,  1.00f, 0, 0, 0.00f, 1.00f, 0.70f, 0, false },
+    { "Lofi Leviathan",   0, 1, 0.22f, 4, 3.60f, 1.00f, 1,  0.66f, 1, 2, 0.25f, 0.95f, 0.76f, 0, true  },
 }};
 
 void setChoiceParameter(juce::AudioProcessorValueTreeState& params, const char* id, int value) {
@@ -157,6 +159,7 @@ void VerbSuiteAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juc
     const auto breathSync = static_cast<int>(parameters_.getRawParameterValue(kBreathSyncParam)->load());
     const auto breathRateHz = parameters_.getRawParameterValue(kBreathRateParam)->load();
     const auto breathDepth = parameters_.getRawParameterValue(kBreathDepthParam)->load();
+    const auto irBank = static_cast<int>(parameters_.getRawParameterValue(kIrBankParam)->load());
     const auto cvMode = static_cast<int>(parameters_.getRawParameterValue(kCvModeParam)->load());
     const auto cvAmount = parameters_.getRawParameterValue(kCvAmountParam)->load();
     const auto cvSmoothing = static_cast<int>(parameters_.getRawParameterValue(kCvSmoothingParam)->load());
@@ -201,6 +204,7 @@ void VerbSuiteAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juc
         tempoSync,
         breathBeats,
         static_cast<float>(bpm),
+        irBank == 1,
         dry,
         wet,
         freezeActive);
@@ -307,6 +311,7 @@ void VerbSuiteAudioProcessor::setCurrentProgram(int index) {
     const auto& p = kFactoryPresets[static_cast<std::size_t>(clamped)];
 
     setChoiceParameter(parameters_, kModeParam, p.mode);
+    setChoiceParameter(parameters_, kIrBankParam, p.irBank);
     setFloatParameter(parameters_, kStabilityParam, p.stability);
     setChoiceParameter(parameters_, kBreathSyncParam, p.breathSync);
     setFloatParameter(parameters_, kBreathRateParam, p.breathRate);
@@ -360,9 +365,11 @@ juce::AudioProcessorValueTreeState::ParameterLayout VerbSuiteAudioProcessor::cre
     juce::StringArray cvSmoothingNames { "Raw", "Envelope" };
     juce::StringArray cvFilterTimeNames { "Fast", "Medium", "Slow" };
     juce::StringArray freezeModeNames { "Latch", "Momentary" };
+    juce::StringArray irBankNames { "Core", "Wild" };
 
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
     params.push_back(std::make_unique<juce::AudioParameterChoice>(kModeParam, "Mode", modeNames, 0));
+    params.push_back(std::make_unique<juce::AudioParameterChoice>(kIrBankParam, "IR Bank", irBankNames, 0));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(kStabilityParam, "Stability", juce::NormalisableRange<float>(0.0f, 1.0f, 0.001f), 0.45f));
     params.push_back(std::make_unique<juce::AudioParameterChoice>(kBreathSyncParam, "Breath Sync", breathSyncNames, 0));
     params.push_back(std::make_unique<juce::AudioParameterFloat>(kBreathRateParam, "Breath Rate", juce::NormalisableRange<float>(0.03f, 8.0f, 0.001f, 0.4f), 0.35f));
@@ -390,6 +397,7 @@ verbsuite::WeirdControls VerbSuiteAudioProcessor::controlsFromModeAndStability(
     bool tempoSync,
     float breathBeats,
     float bpm,
+    bool wildIrBank,
     float dry,
     float wet,
     bool freeze) {
@@ -403,6 +411,7 @@ verbsuite::WeirdControls VerbSuiteAudioProcessor::controlsFromModeAndStability(
     c.tempoSync = tempoSync;
     c.breathBeats = juce::jmax(0.0625f, breathBeats);
     c.bpm = juce::jlimit(30.0f, 260.0f, bpm);
+    c.wildIrBank = wildIrBank;
     c.freeze = freeze;
 
     switch (mode) {

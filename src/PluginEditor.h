@@ -19,6 +19,7 @@ private:
     juce::ComboBox breathSyncBox_;
     juce::ComboBox presetBox_;
     juce::ComboBox cvModeBox_;
+    juce::ComboBox irBankBox_;
     juce::ComboBox cvSmoothingBox_;
     juce::ComboBox cvFilterTimeBox_;
     juce::ComboBox freezeModeBox_;
@@ -38,6 +39,7 @@ private:
     juce::Label modeLabel_;
     juce::Label stabilityLabel_;
     juce::Label presetLabel_;
+    juce::Label irBankLabel_;
     juce::Label breathSyncLabel_;
     juce::Label breathRateLabel_;
     juce::Label breathDepthLabel_;
@@ -55,6 +57,7 @@ private:
     using ButtonAttachment = juce::AudioProcessorValueTreeState::ButtonAttachment;
 
     std::unique_ptr<ChoiceAttachment> modeAttachment_;
+    std::unique_ptr<ChoiceAttachment> irBankAttachment_;
     std::unique_ptr<ChoiceAttachment> breathSyncAttachment_;
     std::unique_ptr<ChoiceAttachment> freezeModeAttachment_;
     std::unique_ptr<ChoiceAttachment> cvModeAttachment_;

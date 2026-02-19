@@ -92,16 +92,39 @@ std::string WeirdConvolutionReverb::modeName() const {
 
 void WeirdConvolutionReverb::buildIRBank() {
     irBank_.clear();
+    // Core bank.
     irBank_.push_back(generateIR(640, 0.30f, 0.30f, 0.05f));
     irBank_.push_back(generateIR(960, 0.80f, 0.60f, 0.25f));
     irBank_.push_back(generateIR(1408, 1.60f, 0.80f, 0.55f));
     irBank_.push_back(generateIR(2048, 2.80f, 0.95f, 0.88f));
-
-    // Process and conceptual IRs: modem-ish bursts, morse-like gates, body pulses.
     irBank_.push_back(generateMorseIR(1536, 0.40f));
     irBank_.push_back(generateMorseIR(2048, 0.78f));
     irBank_.push_back(generateBodyIR(1664, 1.6f));
     irBank_.push_back(generateBodyIR(2304, 3.1f));
+
+    // Wild bank.
+    irBank_.push_back(generateIR(384, 0.10f, 0.98f, 0.98f));
+    irBank_.push_back(generateIR(3072, 5.60f, 0.25f, 0.95f));
+    irBank_.push_back(generateMorseIR(4096, 0.96f));
+    irBank_.push_back(generateBodyIR(4096, 7.2f));
+    irBank_.push_back(generateIR(819, 0.23f, 0.99f, 0.12f));
+    irBank_.push_back(generateMorseIR(1200, 0.10f));
+    irBank_.push_back(generateBodyIR(5120, 0.4f));
+    irBank_.push_back(generateIR(4608, 7.80f, 1.0f, 0.50f));
+
+    // Distort/scramble wild entries for stronger character.
+    for (std::size_t b = 8; b < irBank_.size(); ++b) {
+        auto& ir = irBank_[b];
+        for (std::size_t i = 0; i < ir.size(); ++i) {
+            if ((i % 17) == 0) {
+                ir[i] = -ir[i];
+            }
+            if ((i % 31) == 0) {
+                ir[i] *= 1.8f;
+            }
+            ir[i] = std::tanh(ir[i] * 2.8f);
+        }
+    }
 }
 
 std::vector<float> WeirdConvolutionReverb::generateIR(std::size_t length, float decaySeconds, float diffusion, float tone) {
@@ -182,11 +205,14 @@ void WeirdConvolutionReverb::updateLivingIR() {
     const float movingIndexA = clamp01(featureEnvelope_ * 5.0f + controls_.entropy * 0.35f + instability * 0.2f);
     const float movingIndexB = clamp01(featureBrightness_ * 7.5f + controls_.memory * 0.25f);
 
-    const auto sampleBank = [this](float idx) {
-        const float pos = idx * static_cast<float>(irBank_.size() - 1);
+    const std::size_t bankStart = controls_.wildIrBank ? 8u : 0u;
+    const std::size_t bankCount = 8u;
+
+    const auto sampleBank = [this, bankStart](float idx) {
+        const float pos = idx * static_cast<float>(bankCount - 1);
         const std::size_t i0 = static_cast<std::size_t>(pos);
-        const std::size_t i1 = std::min(i0 + 1, irBank_.size() - 1);
-        return morphIR(irBank_[i0], irBank_[i1], pos - static_cast<float>(i0));
+        const std::size_t i1 = std::min(i0 + 1, bankCount - 1);
+        return morphIR(irBank_[bankStart + i0], irBank_[bankStart + i1], pos - static_cast<float>(i0));
     };
 
     std::vector<float> baseA = sampleBank(movingIndexA);
@@ -196,8 +222,8 @@ void WeirdConvolutionReverb::updateLivingIR() {
     const float morph = 0.5f + 0.48f * std::sin(static_cast<float>(frameCounter_) * (0.0007f + modeSkew * 0.0005f));
 
     activeIRMid_ = morphIR(baseA, baseB, morph);
-    activeIRLow_ = morphIR(baseA, irBank_[0], 0.4f + 0.5f * controls_.memory);
-    activeIRHigh_ = morphIR(baseB, irBank_.back(), 0.45f + 0.45f * controls_.entropy);
+    activeIRLow_ = morphIR(baseA, irBank_[bankStart], 0.4f + 0.5f * controls_.memory);
+    activeIRHigh_ = morphIR(baseB, irBank_[bankStart + bankCount - 1], 0.45f + 0.45f * controls_.entropy);
 
     applyElasticTime(activeIRLow_);
     applyElasticTime(activeIRMid_);

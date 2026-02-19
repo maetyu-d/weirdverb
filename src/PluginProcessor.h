@@ -50,6 +50,7 @@ private:
         bool tempoSync,
         float breathBeats,
         float bpm,
+        bool wildIrBank,
         float dry,
         float wet,
         bool freeze);

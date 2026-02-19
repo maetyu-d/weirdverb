@@ -4,6 +4,7 @@
 
 namespace {
 constexpr const char* kModeParam = "mode";
+constexpr const char* kIrBankParam = "ir_bank";
 constexpr const char* kStabilityParam = "stability";
 constexpr const char* kBreathSyncParam = "breath_sync";
 constexpr const char* kBreathRateParam = "breath_rate";
@@ -68,6 +69,7 @@ VerbSuiteAudioProcessorEditor::VerbSuiteAudioProcessorEditor(VerbSuiteAudioProce
     }
 
     modeBox_.addItemList(modeNames, 1);
+    irBankBox_.addItemList({ "Core", "Wild" }, 1);
     breathSyncBox_.addItemList({ "Free", "1 bar", "1/2", "1/4", "1/8", "1/16", "1/8T", "1/4D" }, 1);
     cvModeBox_.addItemList({ "Off", "Audio-rate" }, 1);
     cvSmoothingBox_.addItemList({ "Raw", "Envelope" }, 1);
@@ -92,6 +94,7 @@ VerbSuiteAudioProcessorEditor::VerbSuiteAudioProcessorEditor(VerbSuiteAudioProce
 
     presetLabel_.setText("Preset", juce::dontSendNotification);
     modeLabel_.setText("Mode", juce::dontSendNotification);
+    irBankLabel_.setText("IR Bank", juce::dontSendNotification);
     breathSyncLabel_.setText("Breath Sync", juce::dontSendNotification);
     cvModeLabel_.setText("Stability CV", juce::dontSendNotification);
     cvSmoothingLabel_.setText("CV Smoothing", juce::dontSendNotification);
@@ -105,14 +108,14 @@ VerbSuiteAudioProcessorEditor::VerbSuiteAudioProcessorEditor(VerbSuiteAudioProce
     wetLabel_.setText("Wet", juce::dontSendNotification);
     outputLabel_.setText("Output", juce::dontSendNotification);
 
-    for (auto* l : { &presetLabel_, &modeLabel_, &breathSyncLabel_, &cvModeLabel_, &cvSmoothingLabel_, &cvFilterTimeLabel_,
+    for (auto* l : { &presetLabel_, &modeLabel_, &irBankLabel_, &breathSyncLabel_, &cvModeLabel_, &cvSmoothingLabel_, &cvFilterTimeLabel_,
                      &freezeModeLabel_, &stabilityLabel_, &breathRateLabel_, &breathDepthLabel_, &cvAmountLabel_,
                      &dryLabel_, &wetLabel_, &outputLabel_ }) {
         styleSmallLabel(*l);
         addAndMakeVisible(*l);
     }
 
-    for (auto* c : { &presetBox_, &modeBox_, &breathSyncBox_, &cvModeBox_, &cvSmoothingBox_, &cvFilterTimeBox_, &freezeModeBox_ }) {
+    for (auto* c : { &presetBox_, &modeBox_, &irBankBox_, &breathSyncBox_, &cvModeBox_, &cvSmoothingBox_, &cvFilterTimeBox_, &freezeModeBox_ }) {
         styleCombo(*c);
         addAndMakeVisible(*c);
     }
@@ -174,6 +177,7 @@ VerbSuiteAudioProcessorEditor::VerbSuiteAudioProcessorEditor(VerbSuiteAudioProce
     };
 
     modeAttachment_ = std::make_unique<ChoiceAttachment>(processor_.parameters(), kModeParam, modeBox_);
+    irBankAttachment_ = std::make_unique<ChoiceAttachment>(processor_.parameters(), kIrBankParam, irBankBox_);
     breathSyncAttachment_ = std::make_unique<ChoiceAttachment>(processor_.parameters(), kBreathSyncParam, breathSyncBox_);
     freezeModeAttachment_ = std::make_unique<ChoiceAttachment>(processor_.parameters(), kFreezeModeParam, freezeModeBox_);
     cvModeAttachment_ = std::make_unique<ChoiceAttachment>(processor_.parameters(), kCvModeParam, cvModeBox_);
@@ -257,7 +261,7 @@ void VerbSuiteAudioProcessorEditor::resized() {
 
     auto topRow = area.removeFromTop(62);
     const int topGap = 10;
-    const int topCols = 7;
+    const int topCols = 8;
     const int topColW = (topRow.getWidth() - (topGap * (topCols - 1))) / topCols;
 
     auto addComboColumn = [&](juce::Label& label, juce::ComboBox& box) {
@@ -270,6 +274,7 @@ void VerbSuiteAudioProcessorEditor::resized() {
 
     addComboColumn(presetLabel_, presetBox_);
     addComboColumn(modeLabel_, modeBox_);
+    addComboColumn(irBankLabel_, irBankBox_);
     addComboColumn(breathSyncLabel_, breathSyncBox_);
     addComboColumn(cvModeLabel_, cvModeBox_);
     addComboColumn(cvSmoothingLabel_, cvSmoothingBox_);

@@ -31,6 +31,7 @@ struct WeirdControls {
     float breathBeats = 1.0f; // Used when tempoSync is true.
     float bpm = 120.0f;
     bool tempoSync = false;
+    bool wildIrBank = false;
     bool freeze = false;
     float wet = 0.7f;
     float dry = 0.3f;
