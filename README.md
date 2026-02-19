@@ -17,6 +17,10 @@ Outputs:
 - AU: `build/weirdVERB_artefacts/AU/weirdVERB.component`
 - VST3: `build/weirdVERB_artefacts/VST3/weirdVERB.vst3`
 
+Prebuilt plugin zips are included in:
+- `artifacts/weirdVERB-AU-macOS.zip`
+- `artifacts/weirdVERB-VST3-macOS.zip`
+
 ## Logic Pro Install
 
 1. Build the project.
