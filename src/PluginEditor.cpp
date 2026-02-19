@@ -20,36 +20,36 @@ constexpr const char* kFreezeModeParam = "freeze_mode";
 constexpr const char* kOversampleHqParam = "oversample_hq";
 
 void styleSmallLabel(juce::Label& label) {
-    label.setColour(juce::Label::textColourId, juce::Colour(0xffc8d0dc).withAlpha(0.74f));
+    label.setColour(juce::Label::textColourId, juce::Colour(0xffd7c7b2).withAlpha(0.82f));
     label.setFont(juce::Font(juce::FontOptions(12.0f, juce::Font::plain)));
     label.setJustificationType(juce::Justification::centredLeft);
 }
 
 void styleCombo(juce::ComboBox& combo) {
-    combo.setColour(juce::ComboBox::backgroundColourId, juce::Colour(0xff131821));
-    combo.setColour(juce::ComboBox::outlineColourId, juce::Colour(0xff2a303a));
-    combo.setColour(juce::ComboBox::textColourId, juce::Colour(0xffe2e8f2));
-    combo.setColour(juce::ComboBox::buttonColourId, juce::Colour(0xff131821));
-    combo.setColour(juce::ComboBox::arrowColourId, juce::Colour(0xffa8b8cc));
+    combo.setColour(juce::ComboBox::backgroundColourId, juce::Colour(0xff26211c));
+    combo.setColour(juce::ComboBox::outlineColourId, juce::Colour(0xff5a4a3a));
+    combo.setColour(juce::ComboBox::textColourId, juce::Colour(0xffefe2d1));
+    combo.setColour(juce::ComboBox::buttonColourId, juce::Colour(0xff26211c));
+    combo.setColour(juce::ComboBox::arrowColourId, juce::Colour(0xffb48861));
 }
 
 void styleKnob(juce::Slider& slider, const juce::String& suffix) {
     slider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, true, 74, 18);
     slider.setTextValueSuffix(suffix);
-    slider.setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colour(0xff2a303a));
-    slider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colour(0xff9bb0c8));
-    slider.setColour(juce::Slider::thumbColourId, juce::Colour(0xffeef2f8));
-    slider.setColour(juce::Slider::textBoxTextColourId, juce::Colour(0xffd6dde8));
-    slider.setColour(juce::Slider::textBoxBackgroundColourId, juce::Colour(0xff131821));
-    slider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colour(0xff2a303a));
+    slider.setColour(juce::Slider::rotarySliderOutlineColourId, juce::Colour(0xff4a3e34));
+    slider.setColour(juce::Slider::rotarySliderFillColourId, juce::Colour(0xffb08d6e));
+    slider.setColour(juce::Slider::thumbColourId, juce::Colour(0xffe8d9c7));
+    slider.setColour(juce::Slider::textBoxTextColourId, juce::Colour(0xffeadac7));
+    slider.setColour(juce::Slider::textBoxBackgroundColourId, juce::Colour(0xff241f1a));
+    slider.setColour(juce::Slider::textBoxOutlineColourId, juce::Colour(0xff5a4a3a));
 }
 
 void styleButton(juce::Button& button) {
-    button.setColour(juce::TextButton::buttonColourId, juce::Colour(0xff171d27));
-    button.setColour(juce::TextButton::buttonOnColourId, juce::Colour(0xff2f3a49));
-    button.setColour(juce::TextButton::textColourOffId, juce::Colour(0xffdfe6f2));
-    button.setColour(juce::TextButton::textColourOnId, juce::Colour(0xffeef4ff));
+    button.setColour(juce::TextButton::buttonColourId, juce::Colour(0xff2c251f));
+    button.setColour(juce::TextButton::buttonOnColourId, juce::Colour(0xff6a4a31));
+    button.setColour(juce::TextButton::textColourOffId, juce::Colour(0xffeadbc8));
+    button.setColour(juce::TextButton::textColourOnId, juce::Colour(0xfffff2e2));
 }
 
 void setParamValue(juce::AudioProcessorValueTreeState& params, const char* id, float normalized01) {
@@ -85,7 +85,7 @@ VerbSuiteAudioProcessorEditor::VerbSuiteAudioProcessorEditor(VerbSuiteAudioProce
     };
 
     title_.setText("Very Weird Convolution", juce::dontSendNotification);
-    title_.setColour(juce::Label::textColourId, juce::Colour(0xffedf2fa));
+    title_.setColour(juce::Label::textColourId, juce::Colour(0xfff1e0cd));
     title_.setJustificationType(juce::Justification::centredLeft);
     title_.setFont(juce::Font(juce::FontOptions(24.0f, juce::Font::plain)));
     addAndMakeVisible(title_);
@@ -198,34 +198,51 @@ VerbSuiteAudioProcessorEditor::VerbSuiteAudioProcessorEditor(VerbSuiteAudioProce
 }
 
 void VerbSuiteAudioProcessorEditor::paint(juce::Graphics& g) {
-    const juce::Colour bgTop(0xff0c1016);
-    const juce::Colour bgBot(0xff0f131a);
+    const juce::Colour bgTop(0xff140f0c);
+    const juce::Colour bgBot(0xff0f0b09);
     g.setGradientFill(juce::ColourGradient(bgTop, 0.0f, 0.0f, bgBot, 0.0f, static_cast<float>(getHeight()), false));
     g.fillAll();
 
     auto bounds = getLocalBounds().toFloat().reduced(14.0f);
-    g.setColour(juce::Colour(0xff161b23));
+    g.setColour(juce::Colour(0xff231c17));
     g.fillRoundedRectangle(bounds, 18.0f);
 
-    g.setColour(juce::Colour(0xfff2f6ff).withAlpha(0.10f));
+    g.setColour(juce::Colour(0xff8f7158).withAlpha(0.42f));
     g.drawRoundedRectangle(bounds, 18.0f, 1.0f);
+
+    // Heavy oxidized rust haze.
+    auto rustBand = bounds.reduced(8.0f);
+    g.setGradientFill(juce::ColourGradient(juce::Colour(0xff8d3d1f).withAlpha(0.45f), rustBand.getX(), rustBand.getCentreY(), juce::Colour(0xff2f2018).withAlpha(0.0f), rustBand.getRight(), rustBand.getBottom(), false));
+    g.fillRoundedRectangle(rustBand, 14.0f);
+    g.setGradientFill(juce::ColourGradient(juce::Colour(0xff5f2e1a).withAlpha(0.30f), rustBand.getCentreX(), rustBand.getY(), juce::Colours::transparentBlack, rustBand.getCentreX(), rustBand.getBottom(), false));
+    g.fillRoundedRectangle(rustBand.reduced(10.0f), 12.0f);
+
+    // Grimy brushed streaks.
+    g.setColour(juce::Colour(0xffc5b096).withAlpha(0.08f));
+    for (int y = 22; y < getHeight() - 20; y += 5) {
+        g.drawHorizontalLine(y, 26.0f, static_cast<float>(getWidth() - 70));
+    }
+    g.setColour(juce::Colour(0xff3a2a1f).withAlpha(0.25f));
+    for (int x = 38; x < getWidth() - 80; x += 47) {
+        g.drawVerticalLine(x, 30.0f, static_cast<float>(getHeight() - 34));
+    }
 
     const float meterHeight = static_cast<float>(getHeight()) * 0.33f;
     const float meterY = (static_cast<float>(getHeight()) - meterHeight) * 0.5f + 40.0f;
     const auto meterBounds = juce::Rectangle<float>(static_cast<float>(getWidth() - 56), meterY, 16.0f, meterHeight);
-    g.setColour(juce::Colour(0xff10151c));
+    g.setColour(juce::Colour(0xff251d19));
     g.fillRoundedRectangle(meterBounds, 5.0f);
-    g.setColour(juce::Colour(0xffdfe8f5).withAlpha(0.18f));
+    g.setColour(juce::Colour(0xffb69a80).withAlpha(0.28f));
     g.drawRoundedRectangle(meterBounds, 5.0f, 1.0f);
 
     const float meter = juce::jlimit(0.0f, 1.0f, processor_.getStabilityCvMeter());
     const float meterMaxFill = 0.82f;
     const float fillH = meterBounds.getHeight() * meter * meterMaxFill;
     auto fillRect = meterBounds.withY(meterBounds.getBottom() - fillH).withHeight(fillH);
-    g.setGradientFill(juce::ColourGradient(juce::Colour(0xffdfe7f4), fillRect.getCentreX(), fillRect.getY(), juce::Colour(0xff96a8c1), fillRect.getCentreX(), fillRect.getBottom(), false));
+    g.setGradientFill(juce::ColourGradient(juce::Colour(0xffcf9a68), fillRect.getCentreX(), fillRect.getY(), juce::Colour(0xff7f4c2b), fillRect.getCentreX(), fillRect.getBottom(), false));
     g.fillRoundedRectangle(fillRect, 4.0f);
 
-    g.setColour(juce::Colour(0xffd8e0eb).withAlpha(0.70f));
+    g.setColour(juce::Colour(0xfff0ddc9).withAlpha(0.84f));
     g.setFont(juce::Font(juce::FontOptions(11.0f, juce::Font::plain)));
     g.drawFittedText("CV", getWidth() - 64, static_cast<int>(meterY) - 16, 34, 14, juce::Justification::centred, 1);
 }
