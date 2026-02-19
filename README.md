@@ -1,5 +1,7 @@
 # weirdVERB
 
+![](https://github.com/maetyu-d/weirdverb/blob/main/Screenshot%202026-02-19%20at%2022.11.43.png)
+
 Experimental and very weird lo-fi convolution reverb with "living" IR behavior, sidechain CV modulation, and highly unstable space modes. Built in JUCE (AU/VST3), tested on Mac OS 13.7.7.
 
 ## Features
