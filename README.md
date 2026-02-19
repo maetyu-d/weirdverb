@@ -1,19 +1,10 @@
 # weirdVERB (JUCE AU/VST3)
 
-Experimental lo-fi convolution reverb with living IR behavior, sidechain CV modulation, and highly unstable space modes.
+Experimental lo-fi convolution reverb with living IR behavior, sidechain CV modulation, and highly unstable space modes. Built in JUCE (AU/VST3).
 
 ## Features
 
-- 9 weird convolution modes (`Mode`)
-- `Stability` macro (realistic -> unstable -> autonomous)
-- Tempo-sync elastic IR breathing
-- Sidechain audio-rate `Stability CV` with smoothing + filter time
-- Lo-fi memory engine for lower CPU and deliberate digital texture
-- Freeze (`Latch` / `Momentary`)
-- Dry / Wet / Output controls
-- Randomize + Lock Core
-- 10 factory presets
-- `HQ Export` (2x oversampling in offline renders)
+weirdVEB features "living" convolution, whereby the impulse response continuously morphs across a synthetic IR bank driven by the input’s envelope and brightness, combined with time-variant processing such as elastic (free or tempo-synced) IR “breathing,” micro-Doppler resampling, grain-like shuffling, and IR-only bit reduction and waveshaping. The input can be split into low, mid, and high bands for evolving, role-swapping spatial convolution, while causality shifts, reversed early sections, and phase/polarity perturbations introduce ghosted transients and spectral destabilisation. Convolution feedback and resonant self-excitation enable semi-autonomous drone behavior in unstable states, supported by a lo-fi memory engine with bounded taps, adaptive stride, sample-and-hold wet updates, and quantised texture for character, as well as CPU-efficieny. Sidechain audio can modulate Stability at audio rate with optional envelope smoothing and stepped hold, and freeze modes (latch or momentary) capture and decay the current tail, with optional 2× oversampling for high-quality offline export.
 
 ## Build
 
