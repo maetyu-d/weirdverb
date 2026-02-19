@@ -1,12 +1,19 @@
 # weirdVERB (JUCE AU/VST3)
 
-Single JUCE plugin with:
-- `Mode` switch (9 weird convolution personalities)
-- `Stability` macro (realistic -> unstable -> autonomous)
-- Tempo-sync options for elastic IR breathing
-- Sidechain `Stability CV` audio-rate modulation mode
+Experimental lo-fi convolution reverb with living IR behavior, sidechain CV modulation, and highly unstable space modes.
 
-The DSP treats the IR as a dynamic, process-like signal and adds strong per-mode variation.
+## Features
+
+- 9 weird convolution modes (`Mode`)
+- `Stability` macro (realistic -> unstable -> autonomous)
+- Tempo-sync elastic IR breathing
+- Sidechain audio-rate `Stability CV` with smoothing + filter time
+- Lo-fi memory engine for lower CPU and deliberate digital texture
+- Freeze (`Latch` / `Momentary`)
+- Dry / Wet / Output controls
+- Randomize + Lock Core
+- 10 factory presets
+- `HQ Export` (2x oversampling in offline renders)
 
 ## Build
 
@@ -15,24 +22,36 @@ cmake -S . -B build -DJUCE_DIR=/Users/md/JUCE
 cmake --build build -j
 ```
 
-This builds:
-- `verb_suite_demo` (CLI WAV renderer)
-- `weirdVERB` plugin targets (`AU`, `VST3`) if JUCE is found
+Outputs:
+- AU: `build/weirdVERB_artefacts/AU/weirdVERB.component`
+- VST3: `build/weirdVERB_artefacts/VST3/weirdVERB.vst3`
 
-## New controls
+## Logic Pro Install
 
-- `Breath Sync`: `Free`, `1 bar`, `1/2`, `1/4`, `1/8`, `1/16`, `1/8T`, `1/4D`
-- `Breath Rate`: LFO rate in Hz (used when `Breath Sync = Free`)
-- `Breath Depth`: modulation depth of elastic IR time
-- `Stability CV`: `Off` or `Audio-rate`
-- `CV Amount`: bipolar depth (`-1..1`) applied to sidechain signal for Stability modulation
-- `CV Smoothing`: `Raw` (audio-rate bipolar) or `Envelope` (unipolar follower)
-- `CV Filter Time`: `Fast` / `Medium` / `Slow` envelope response (used by `CV Smoothing = Envelope`)
+1. Build the project.
+2. Copy AU component into Logic’s user components folder:
 
-When `Stability CV` is `Audio-rate`, the sidechain input modulates Stability per-sample.
-The editor shows a live CV meter on the right edge.
+```bash
+ditto "build/weirdVERB_artefacts/AU/weirdVERB.component" "$HOME/Library/Audio/Plug-Ins/Components/weirdVERB.component"
+killall -9 AudioComponentRegistrar 2>/dev/null || true
+```
 
-## Factory presets (10)
+3. Restart Logic Pro.
+4. Open **Plugin Manager** and rescan if needed.
+5. Insert `weirdVERB` on an audio aux/track.
+
+## Quick Start (Logic)
+
+1. Pick a preset from `Preset`.
+2. Set `Dry` around `0.3-0.6` and `Wet` around `0.5-1.0`.
+3. For rhythmic motion, set `Breath Sync` to `1/4` or `1/8`.
+4. For modulation by sidechain signal:
+- Route sidechain input in Logic
+- Set `Stability CV` to `Audio-rate`
+- Increase `CV Amount`
+- Choose `CV Smoothing` and `CV Filter Time`
+
+## Factory Presets
 
 1. Null Tape
 2. Precrime Bloom
@@ -45,38 +64,7 @@ The editor shows a live CV meter on the right edge.
 9. Self-Taught Room
 10. Lofi Leviathan
 
-## Modes
+## Notes
 
-1. Living Signal
-2. Uncanny Causality
-3. Spectral Ghost
-4. Rainforest Memory
-5. Process Imprint
-6. Digital Failure
-7. Anti-Space
-8. Afterimage
-9. Habit Room
-
-## What got weirder
-
-- Expanded IR bank includes procedural non-room IRs (morse-like, body-pulse, process/noise signatures)
-- Time-variant tri-band convolution with per-band IR assignment/swap
-- Non-causal pre-ringing and reversible early reflections
-- Spectral/phase-like IR destabilization and random polarity reseeding
-- Convolution feedback with resonant/self-excited behavior
-- Stochastic frame dropping and blockwise degradation in digital mode
-- Autonomous drone emergence at low Stability, especially in Habit Room
-
-## Demo renders
-
-```bash
-./build/verb_suite_demo living
-./build/verb_suite_demo causal
-./build/verb_suite_demo spectral
-./build/verb_suite_demo memory
-./build/verb_suite_demo imprint
-./build/verb_suite_demo digital
-./build/verb_suite_demo antispace
-./build/verb_suite_demo afterimage
-./build/verb_suite_demo habit
-```
+- `HQ Export` is intended for offline rendering/bounce, not live low-latency use.
+- If Logic appears to cache old plugin binaries, clear cache by killing `AudioComponentRegistrar` and rescanning.
