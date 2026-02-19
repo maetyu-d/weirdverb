@@ -1,6 +1,6 @@
 # weirdVERB
 
-Experimental and very weird lo-fi convolution reverb with "living" IR behavior, sidechain CV modulation, and highly unstable space modes. Built in JUCE (AU/VST3).
+Experimental and very weird lo-fi convolution reverb with "living" IR behavior, sidechain CV modulation, and highly unstable space modes. Built in JUCE (AU/VST3), tested on Mac OS 13.7.7.
 
 ## Features
 
